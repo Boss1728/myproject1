@@ -1,5 +1,6 @@
-@extends("theme")
+@extends('layout.main')
 @section("title","Student")
+@section("h","Student")
 @section("content")
 
 

@@ -82,4 +82,7 @@ Route::get("/student" , function (){
 	return view("student/index");
 });
 
+Route::get('/table', function () {
+    return view('layout/table');
+});
 

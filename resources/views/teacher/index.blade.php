@@ -1,5 +1,6 @@
-@extends("theme")
+@extends("layout.main")
 @section("title","Teacher")
+@section("h","Teacher")
 @section("content")
         <table class="table table-striped">
           <thead>
