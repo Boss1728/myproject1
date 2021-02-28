@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Laravel\Socialite\Facades\Socialite;
+use App\User;
+use Illuminate\Support\Facades\Auth;
+use Revolution\Line\Facades\Bot;
 
 class LoginController extends Controller
 {
@@ -36,5 +40,74 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    // Google login
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+// Google callback
+    public function handleGoogleCallback()
+    {
+        $user = Socialite::driver('google')->user();
+        // print_r($user);
+        $this->_registerOrLoginUser($user);
+// Return home after login
+        return redirect()->intended();
+    }
+// Facebook login
+    public function redirectToFacebook()
+    {
+        return Socialite::driver('facebook')->redirect();
+    }
+// Facebook callback
+    public function handleFacebookCallback()
+    {
+        $user = Socialite::driver('facebook')->user();
+        // print_r($user);
+        $this->_registerOrLoginUser($user);
+// Return home after login
+        return redirect()->intended();
+    }
+// Line login
+    public function redirectToLine()
+    {
+        return Socialite::driver('line')->redirect();
+    }
+// Line callback
+    public function handleLineCallback()
+    {
+        $user = Socialite::driver('line')->user();
+        // print_r($user);
+        $this->_registerOrLoginUser($user);
+// Return home after login
+        return redirect()->intended();
+    }
+protected function _registerOrLoginUser($data)
+    {
+        //GET USER 
+        $user = User::where('email', '=', $data->email)->first();
+if (!$user) {
+            //CREATE NEW USER
+            $user = new User();
+            $user->name = $data->name;
+            $user->provider_id = $data->id;
+if (!empty($data->email)) {
+                $user->email = $data->email;
+            }
+            if (!empty($data->avatar)) {
+                $user->avatar = $data->avatar;
+            }
+if (empty($data->email)) {
+                $user->email = "";
+            }
+            if (empty($data->avatar)) {
+                $user->avatar = "";
+            }
+$user->save();
+        }
+        //LOGIN
+        Auth::login($user);
     }
 }

@@ -23,6 +23,10 @@ class CreateCovid19sTable extends Migration
             $table->integer('active')->nullable();
             $table->integer('death')->nullable();
             $table->integer('recovered')->nullable();
+            
+
+
+
 
         });
     }
